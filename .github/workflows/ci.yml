@@ -6,8 +6,10 @@ jobs:
   # Runner
 
   Runner-Ubuntu:
-    name: Matrix-Runner-Ubuntu-20.04
+    name: Runner-Ubuntu-20.04
     runs-on: Ubuntu-20.04
+    strategy:
+      fail-fast: false
     env:
       CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
     steps:
@@ -32,6 +34,8 @@ jobs:
   Runner-Windows:
     name: Runner-Windows-2019
     runs-on: windows-2019
+    strategy:
+      fail-fast: false
     env:
       CMAKE_BUILD_DIR: ${{ github.workspace }}\builddir
     steps:
@@ -52,6 +56,43 @@ jobs:
         run: |
           Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
           ctest -C Debug
+
+  # Docker
+
+  Docker:
+    name: Docker-centos:7.5.1804
+    runs-on: ubuntu-20.04
+    container: centos:7.5.1804
+    strategy:
+      fail-fast: false
+    env:
+      CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
+      CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install prerequisites
+        run: |
+          yum clean all
+          yum install epel-release
+          yum clean all
+          yum groupinstall -y "Development tools"
+          yum install cmake3
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake3 -S ${{ env.CMAKE_SOURCE_DIR }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake3 --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest3
 
  # Matrix Runner
 
