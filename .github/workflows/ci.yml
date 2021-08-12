@@ -1,17 +1,13 @@
 name: GitHub Actions Demo
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Ubuntu:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: Configure
-        run: mkdir ${{ github.workspace }}/../build
-        run: cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/../build
-      - name: Build
-        run: cd ${{ github.workspace }}/../build
-        run: make
-      - name: Test
-        run: cd ${{ github.workspace }}/../build
-        run: ctest
+      - run: mkdir ${{ github.workspace }}/../build
+      - run: cd ${{ github.workspace }}/../build
+      - run: cmake -S ${{ github.workspace }}
+      - run: make
+      - run: ctest
