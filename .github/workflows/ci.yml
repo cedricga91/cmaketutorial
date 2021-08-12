@@ -11,9 +11,12 @@ jobs:
       - name: Configure
         run: |
           mkdir ${{ github.workspace }}/../build
-          cd ${{ github.workspace }}/../build
           cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
       - name: Build
-        run: make
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          make
       - name: Test
-        run: ctest
+        run:
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
