@@ -3,14 +3,14 @@ on: [push]
 
 jobs:
 
-  Linux:
-    name: Linux-${{ matrix.os }}
+  Docker:
+    name: Docker-${{ matrix.os }}
     runs-on: ubuntu-20.04
     container: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu:20.04', centos]
+        os: ['ubuntu:20.04', 'ubuntu:21.04']
     env:
       CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
       CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
@@ -20,7 +20,7 @@ jobs:
       - name: Install prerequisites
         run: |
           apt update
-          apt install -y cmake
+          apt install -y build-essential cmake
       - name: Configure
         shell: bash
         run: |
