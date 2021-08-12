@@ -109,7 +109,7 @@ jobs:
       - name: Install prerequisites
         run: |
           yum clean all
-          rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+          rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
           yum install -y dnf-plugins-core
           dnf config-manager --set-enabled PowerTools
           yum clean all
