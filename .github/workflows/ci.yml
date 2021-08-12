@@ -1,6 +1,11 @@
 name: CI
 on: [push]
+
+env:
+  CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
+
 jobs:
+
   Linux:
     runs-on: ubuntu-20.04
     env:
@@ -11,7 +16,7 @@ jobs:
       - name: Configure
         shell: bash
         run: |
-          mkdir ${{ github.workspace }}/../build
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
           cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
       - name: Build
         shell: bash
@@ -23,25 +28,24 @@ jobs:
         run: |
           cd ${{ env.CMAKE_BUILD_DIR }}
           ctest
+
   Windows:
     runs-on: windows-2019
-    env:
-      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Configure
-        shell: bash
+        shell: powershell
         run: |
-          mkdir "${{ github.workspace }}/../build"
+          new-item ${{ env.CMAKE_BUILD_DIR }} -itemtype directory
           cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
       - name: Build
-        shell: bash
+        shell: powershell
         run: |
-          cd "${{ env.CMAKE_BUILD_DIR }}"
+          Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
           make
       - name: Test
-        shell: bash
+        shell: powershell
         run: |
-          cd "${{ env.CMAKE_BUILD_DIR }}"
+          Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
           ctest
