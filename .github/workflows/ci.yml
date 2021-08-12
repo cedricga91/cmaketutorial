@@ -8,8 +8,6 @@ jobs:
 
   Linux:
     runs-on: ubuntu-20.04
-    env:
-      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -22,7 +20,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.CMAKE_BUILD_DIR }}
-          make
+          cmake --build .
       - name: Test
         shell: bash
         run: |
@@ -43,9 +41,9 @@ jobs:
         shell: powershell
         run: |
           Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
-          make
+          cmake --build . --config Debug
       - name: Test
         shell: powershell
         run: |
           Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
-          ctest
+          ctest -C Debug
