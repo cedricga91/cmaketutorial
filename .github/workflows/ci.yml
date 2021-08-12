@@ -62,7 +62,11 @@ jobs:
   Docker-centos-7_5_1804:
     name: Docker-centos:7.5.1804
     runs-on: ubuntu-20.04
-    container: centos:7.5.1804
+    container:
+      image: centos:7.5.1804
+      #credentials:
+      #  username: ${{ secrets.docker_hub_username}}
+      #  password: ${{ secrets.docker_hub_password}}
     strategy:
       fail-fast: false
     env:
@@ -97,7 +101,11 @@ jobs:
   Docker-rockylinux-8_4:
     name: Docker-rockylinux:8.4
     runs-on: ubuntu-20.04
-    container: rockylinux/rockylinux:8.4
+    container:
+      image: rockylinux/rockylinux:8.4
+      #credentials:
+      #  username: ${{ secrets.docker_hub_username}}
+      #  password: ${{ secrets.docker_hub_password}}
     strategy:
       fail-fast: false
     env:
@@ -166,7 +174,11 @@ jobs:
   Matrix-Docker:
     name: Matrix-Docker-${{ matrix.os }}
     runs-on: ubuntu-20.04
-    container: ${{ matrix.os }}
+    container:
+      image: ${{ matrix.os }}
+      #credentials:
+      #  username: ${{ secrets.docker_hub_username}}
+      #  password: ${{ secrets.docker_hub_password}}
     strategy:
       fail-fast: false
       matrix:
