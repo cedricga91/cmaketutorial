@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu:20.04', 'ubuntu:21.04']
+        os: ['debian:stable', 'debian:testing', 'debian:unstable']
     env:
       CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
       CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
@@ -20,6 +20,7 @@ jobs:
       - name: Install prerequisites
         run: |
           apt-get update
+          apt-get upgrade -y
           DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential cmake
       - name: Configure
         shell: bash
