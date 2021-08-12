@@ -7,8 +7,12 @@ env:
 jobs:
 
   Linux:
-    name: [ubuntu-20.04, ubuntu-21.10]
-    runs-on: [ubuntu-20.04, ubuntu-21.10]
+    name: Linux-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-21.10, ubuntu-20.04]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -29,6 +33,7 @@ jobs:
           ctest
 
   Windows:
+    name: Windows-2019
     runs-on: windows-2019
     steps:
       - name: Check out repository code
