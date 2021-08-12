@@ -74,10 +74,10 @@ jobs:
       - name: Install prerequisites
         run: |
           yum clean all
-          yum install epel-release
+          yum install -y epel-release
           yum clean all
           yum groupinstall -y "Development tools"
-          yum install cmake3
+          yum install -y cmake3
       - name: Configure
         shell: bash
         run: |
