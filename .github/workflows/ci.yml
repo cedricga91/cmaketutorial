@@ -17,6 +17,6 @@ jobs:
           cd ${{ env.CMAKE_BUILD_DIR }}
           make
       - name: Test
-        run:
+        run: |
           cd ${{ env.CMAKE_BUILD_DIR }}
           ctest
