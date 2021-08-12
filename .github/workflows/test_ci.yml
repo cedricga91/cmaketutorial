@@ -1,0 +1,56 @@
+name: CI Test
+on: [push]
+
+env:
+  CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
+
+jobs:
+
+  Linux:
+    name: Linux-${{ matrix.os }}
+    runs-on: ubuntu-20.04
+    container: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu:18.04, ubuntu:20.04]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
+
+  Windows:
+    name: Windows-2019
+    runs-on: windows-2019
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        shell: powershell
+        run: |
+          new-item ${{ env.CMAKE_BUILD_DIR }} -itemtype directory
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: powershell
+        run: |
+          Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build . --config Debug
+      - name: Test
+        shell: powershell
+        run: |
+          Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
+          ctest -C Debug
