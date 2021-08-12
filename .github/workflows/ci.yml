@@ -5,7 +5,7 @@ jobs:
 
   # Runner
 
-  Runner-Ubuntu:
+  Runner-Ubuntu-20.04:
     name: Runner-Ubuntu-20.04
     runs-on: Ubuntu-20.04
     strategy:
@@ -31,7 +31,7 @@ jobs:
           cd ${{ env.CMAKE_BUILD_DIR }}
           ctest
 
-  Runner-Windows:
+  Runner-Windows-2019:
     name: Runner-Windows-2019
     runs-on: windows-2019
     strategy:
@@ -59,7 +59,7 @@ jobs:
 
   # Docker
 
-  Docker:
+  Docker-centos:7.5.1804:
     name: Docker-centos:7.5.1804
     runs-on: ubuntu-20.04
     container: centos:7.5.1804
@@ -93,6 +93,43 @@ jobs:
         run: |
           cd ${{ env.CMAKE_BUILD_DIR }}
           ctest3
+
+  Docker-rockylinux:8.4:
+    name: Docker-rockylinux:8.4
+    runs-on: ubuntu-20.04
+    container: rockylinux/rockylinux:8.4
+    strategy:
+      fail-fast: false
+    env:
+      CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
+      CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install prerequisites
+        run: |
+          yum clean all
+          rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+          yum install -y dnf-plugins-core
+          dnf config-manager --set-enabled PowerTools
+          yum clean all
+          yum groupinstall -y "Development tools"
+          yum install -y cmake
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ env.CMAKE_SOURCE_DIR }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
 
  # Matrix Runner
 
