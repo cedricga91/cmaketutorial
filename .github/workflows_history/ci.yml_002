@@ -1,0 +1,22 @@
+name: CI
+on: [push]
+jobs:
+  Ubuntu:
+    runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        run: |
+          mkdir ${{ github.workspace }}/../build
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          make
+      - name: Test
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest

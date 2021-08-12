@@ -1,0 +1,199 @@
+name: CI
+on: [push]
+
+jobs:
+
+  # Runner
+
+  Runner-ubuntu-20_04:
+    name: Runner-Ubuntu-20.04
+    runs-on: Ubuntu-20.04
+    strategy:
+      fail-fast: false
+    env:
+      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
+
+  Runner-windows-2019:
+    name: Runner-Windows-2019
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+    env:
+      CMAKE_BUILD_DIR: ${{ github.workspace }}\builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        shell: powershell
+        run: |
+          new-item ${{ env.CMAKE_BUILD_DIR }} -itemtype directory
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: powershell
+        run: |
+          Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build . --config Debug
+      - name: Test
+        shell: powershell
+        run: |
+          Set-Location -Path ${{ env.CMAKE_BUILD_DIR }}
+          ctest -C Debug
+
+  # Docker
+
+  Docker-centos-7_5_1804:
+    name: Docker-centos:7.5.1804
+    runs-on: ubuntu-20.04
+    container: centos:7.5.1804
+    strategy:
+      fail-fast: false
+    env:
+      CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
+      CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install prerequisites
+        run: |
+          yum clean all
+          yum install -y epel-release
+          yum clean all
+          yum groupinstall -y "Development tools"
+          yum install -y cmake3
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake3 -S ${{ env.CMAKE_SOURCE_DIR }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake3 --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest3
+
+  Docker-rockylinux-8_4:
+    name: Docker-rockylinux:8.4
+    runs-on: ubuntu-20.04
+    container: rockylinux/rockylinux:8.4
+    strategy:
+      fail-fast: false
+    env:
+      CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
+      CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install prerequisites
+        run: |
+          yum clean all
+          rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
+          yum install -y dnf-plugins-core
+          dnf config-manager --set-enabled powertools
+          yum clean all
+          yum groupinstall -y "Development tools"
+          yum install -y cmake
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ env.CMAKE_SOURCE_DIR }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
+
+ # Matrix Runner
+
+  Matrix-Runner:
+    name: Matrix-Runner-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+    env:
+      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
+
+  # Matrix Docker
+
+  Matrix-Docker:
+    name: Matrix-Docker-${{ matrix.os }}
+    runs-on: ubuntu-20.04
+    container: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['debian:stable', 'debian:testing', 'debian:unstable']
+    env:
+      CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
+      CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install prerequisites
+        run: |
+          apt-get update
+          apt-get upgrade -y
+          DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential cmake
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ env.CMAKE_SOURCE_DIR }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
