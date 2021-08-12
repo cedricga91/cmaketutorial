@@ -33,15 +33,15 @@ jobs:
       - name: Configure
         shell: bash
         run: |
-          mkdir ${{ github.workspace }}/../build
+          mkdir "${{ github.workspace }}/../build"
           cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
       - name: Build
         shell: bash
         run: |
-          cd ${{ env.CMAKE_BUILD_DIR }}
+          cd "${{ env.CMAKE_BUILD_DIR }}"
           make
       - name: Test
         shell: bash
         run: |
-          cd ${{ env.CMAKE_BUILD_DIR }}
+          cd "${{ env.CMAKE_BUILD_DIR }}"
           ctest
