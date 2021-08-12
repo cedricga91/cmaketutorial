@@ -1,22 +1,47 @@
 name: CI
 on: [push]
 jobs:
-  Ubuntu:
-    runs-on: ubuntu-latest
+  Linux:
+    runs-on: ubuntu-20.04
     env:
       CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Configure
+        shell: bash
         run: |
           mkdir ${{ github.workspace }}/../build
           cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
       - name: Build
+        shell: bash
         run: |
           cd ${{ env.CMAKE_BUILD_DIR }}
           make
       - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
+  Windows:
+    runs-on: windows-2019
+    env:
+      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ github.workspace }}/../build
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          make
+      - name: Test
+        shell: bash
         run: |
           cd ${{ env.CMAKE_BUILD_DIR }}
           ctest
