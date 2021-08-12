@@ -3,11 +3,17 @@ on: [push]
 jobs:
   Ubuntu:
     runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - run: mkdir ${{ github.workspace }}/../build
-      - run: cd ${{ github.workspace }}/../build
-      - run: cmake -S ${{ github.workspace }}
-      - run: make
-      - run: ctest
+      - name: Configure
+        run: |
+          mkdir ${{ github.workspace }}/../build
+          cd ${{ github.workspace }}/../build
+          cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        run: make
+      - name: Test
+        run: ctest
