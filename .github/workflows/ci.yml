@@ -111,7 +111,7 @@ jobs:
           yum clean all
           rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
           yum install -y dnf-plugins-core
-          dnf config-manager --set-enabled PowerTools
+          dnf config-manager --set-enabled powertools
           yum clean all
           yum groupinstall -y "Development tools"
           yum install -y cmake
