@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu, centos]
+        os: ['ubuntu:20.04', centos]
     env:
       CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
       CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
@@ -18,7 +18,9 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Install prerequisites
-        run: apt install -y cmake
+        run: |
+          apt update
+          apt install -y cmake
       - name: Configure
         shell: bash
         run: |
