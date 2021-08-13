@@ -6,8 +6,8 @@ jobs:
   # Runner
 
   Runner-ubuntu-20_04:
-    name: Runner-Ubuntu-20.04
-    runs-on: Ubuntu-20.04
+    name: Runner-ubuntu-20.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
     env:
@@ -32,7 +32,7 @@ jobs:
           ctest
 
   Runner-windows-2019:
-    name: Runner-Windows-2019
+    name: Runner-windows-2019
     runs-on: windows-2019
     strategy:
       fail-fast: false
