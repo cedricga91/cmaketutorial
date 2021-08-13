@@ -171,19 +171,22 @@ jobs:
       fail-fast: false
       matrix:
         os: ['debian:stable', 'debian:testing', 'debian:unstable']
-        #include:
-        #  - os: 'debian:stable'
-        #    version: stable
-        #  - os: 'debian:testing'
-        #    version: testing
-        #  - os: 'debian:unstable'
-        #    version: unstable
+        include:
+          - os: 'debian:stable'
+            custom_variable: 'Custom variable for Debian Stable'
+          - os: 'debian:testing'
+            custom_variable: 'Custom variable for Debian Testing'
+          - os: 'debian:unstable'
+            custom_variable: 'Custom variable for Debian Unstable'
     env:
       CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
       CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+      - name: Print custom variable
+        shell: bash
+        run : echo "\${{ matrix.custom_variable }}=${{ matrix.custom_variable }}"
       - name: Install prerequisites
         shell: bash
         run: |
