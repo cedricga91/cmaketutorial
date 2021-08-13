@@ -171,6 +171,13 @@ jobs:
       fail-fast: false
       matrix:
         os: ['debian:stable', 'debian:testing', 'debian:unstable']
+        include:
+          - os: debian:stable
+            version: stable
+          - os: debian:testing
+            version: testing
+          - os: debian:unstable
+            version: unstable
     env:
       CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
       CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
@@ -182,6 +189,15 @@ jobs:
           apt-get update
           apt-get upgrade -y
           DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential cmake
+          if [ "${version}" == "stable" ]; then
+            checksum="bf496ce869d0aa8c1f57e4d1a2e50c8f2fb12a6cd7ccb37ad743bb88f6b76a1e"
+            mkdir cmake
+            wget -O /tmp/cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-linux-x86_64.tar.gz
+            if [ `sha256sum /tmp/cmake.tar.gz` != "${checksum}" ]; then echo "/tmp/cmake.tar.gz checksum error"; exit 1; fi
+            tar xf /tmp/cmake.tar.gz -C /tmp/cmake --strip-components 1
+            export PATH="/tmp/cmake/bin:${PATH}"
+            which cmake
+         fi
       - name: Configure
         shell: bash
         run: |
