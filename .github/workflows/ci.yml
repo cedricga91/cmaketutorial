@@ -172,11 +172,11 @@ jobs:
       matrix:
         os: ['debian:stable', 'debian:testing', 'debian:unstable']
         include:
-          - os: debian:stable
+          - os: 'debian:stable'
             version: stable
-          - os: debian:testing
+          - os: 'debian:testing'
             version: testing
-          - os: debian:unstable
+          - os: 'debian:unstable'
             version: unstable
     env:
       CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
