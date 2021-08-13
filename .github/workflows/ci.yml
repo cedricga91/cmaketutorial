@@ -186,9 +186,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Print custom variable
         shell: bash
-        run : |
-          echo -n '${{ matrix.custom_variable }} = '
-          echo "${{ matrix.custom_variable }}"
+        run : echo "matrix.custom_variable = ${{ matrix.custom_variable }}"
       - name: Install prerequisites
         shell: bash
         run: |
