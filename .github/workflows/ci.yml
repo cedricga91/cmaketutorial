@@ -196,7 +196,7 @@ jobs:
             if [ `sha256sum /tmp/cmake.tar.gz` != "${checksum}" ]; then echo "/tmp/cmake.tar.gz checksum error"; exit 1; fi
             tar xf /tmp/cmake.tar.gz -C /tmp/cmake --strip-components 1
             export PATH="/tmp/cmake/bin:${PATH}"
-            which cmake
+            #which cmake
          fi
       - name: Configure
         shell: bash
