@@ -182,7 +182,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['debian:stable', 'debian:testing', 'debian:unstable']
+        os: ['debian:stable', 'debian:testing', 'debian:unstable', 'edc123/ubuntu:20.04']
         include:
           - os: 'debian:stable'
             custom_variable: 'Custom variable for Debian Stable'
