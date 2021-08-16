@@ -99,7 +99,7 @@ jobs:
           ctest3
 
   Docker-rockylinux-8_4:
-    name: Docker-rockylinux:8.4
+    name: Docker-rockylinux/rockylinux:8.4
     runs-on: ubuntu-20.04
     container:
       image: rockylinux/rockylinux:8.4
