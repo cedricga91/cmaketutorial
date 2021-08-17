@@ -61,7 +61,7 @@ jobs:
 
   Docker-centos-7_5_1804:
     name: Docker-centos:7.5.1804
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: centos:7.5.1804
       #credentials:
@@ -100,7 +100,7 @@ jobs:
 
   Docker-rockylinux-8_4:
     name: Docker-rockylinux/rockylinux:8.4
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: rockylinux/rockylinux:8.4
       #credentials:
@@ -173,7 +173,7 @@ jobs:
 
   Matrix-Docker:
     name: Matrix-Docker-${{ matrix.os }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: ${{ matrix.os }}
       #credentials:
