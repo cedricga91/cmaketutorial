@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.description }}" == "with_tar" ]; then
-            tar xf /eb.tar.gz -C /
+            tar xf /eb.tar.xz -C /
           fi
       - name: Configure
         shell: bash
