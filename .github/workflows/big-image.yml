@@ -1,0 +1,49 @@
+name: Big image
+on: [push, workflow_dispatch]
+
+jobs:
+
+  Matrix-Docker:
+    name: Matrix-Docker-${{ matrix.description }}
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.os }}
+      credentials:
+        username: ${{ secrets.docker_hub_username}}
+        password: ${{ secrets.docker_hub_password}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['vkh06/centos-gimkl-2018b-arcane:7.5.1804-4.4.1-4', 'vkh06/centos-gimkl-2018b-arcane:7.5.1804-4.4.1-4_tar']
+        include:
+          - os: 'vkh06/centos-gimkl-2018b-arcane:7.5.1804-4.4.1-4'
+            description: 'without_tar'
+          - os: 'vkh06/centos-gimkl-2018b-arcane:7.5.1804-4.4.1-4_tar'
+            description: 'with_tar'
+    env:
+      CMAKE_SOURCE_DIR: /__w/cmaketutorial/cmaketutorial
+      CMAKE_BUILD_DIR: /__w/cmaketutorial/cmaketutorial/builddir
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install prerequisites
+        shell: bash
+        run: |
+          if [ "${{ matrix.description }}" == "with_tar" ]; then
+            tar xf /tmp/eb.tar.gz -C /
+          fi
+      - name: Configure
+        shell: bash
+        run: |
+          mkdir ${{ env.CMAKE_BUILD_DIR }}
+          cmake -S ${{ env.CMAKE_SOURCE_DIR }} -B ${{ env.CMAKE_BUILD_DIR }}
+      - name: Build
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          cmake --build .
+      - name: Test
+        shell: bash
+        run: |
+          cd ${{ env.CMAKE_BUILD_DIR }}
+          ctest
