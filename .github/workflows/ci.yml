@@ -20,6 +20,8 @@ jobs:
         run: |
           id
           ls -la ${{ github.workspace }}
+          pwd
+          ls -la /home/runner/work
           mkdir ${{ env.CMAKE_BUILD_DIR }}
           cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_DIR }}
       - name: Build
